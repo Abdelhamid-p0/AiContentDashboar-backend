@@ -1,0 +1,8 @@
+package com.quiz.ai.application.dto.correction;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record QuestionCorrectionChatRequest(
+        @JsonProperty("user_message") String userMessage,
+        @JsonProperty("previous_correction") QuestionCorrectionResponse previousCorrection) {
+}
