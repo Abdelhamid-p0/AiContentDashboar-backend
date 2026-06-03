@@ -28,32 +28,35 @@ class QuestionCorrectionControllerIntegrationTest {
                 QuestionCorrectionController controller = new QuestionCorrectionController(questionCorrectionService);
                 MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
+                QuestionResponse improvedQuestion = new QuestionResponse(
+                                QUESTION_ID,
+                                "What is the solution to 2x - 2 = 2?",
+                                "ONE_CHOICE",
+                                "question_image",
+                                "Corrected feedback",
+                                null,
+                                "question_audio",
+                                1,
+                                new ObjectiveResponse("objective-1", "Solve linear equations"),
+                                List.of(new SubQuestionResponse(
+                                                "sub-question-1",
+                                                "Solve: 2x - 2 = 2",
+                                                1,
+                                                List.of(
+                                                                new AnswerResponse("answer-1", "x = 2",
+                                                                                "answer_image_1", true,
+                                                                                "answer_audio_1", 1),
+                                                                new AnswerResponse("answer-2", "x = 5",
+                                                                                "answer_image_2", false,
+                                                                                "answer_audio_2",
+                                                                                2)))));
+
                 QuestionCorrectionResponse mockedResponse = new QuestionCorrectionResponse(
                                 List.of("Corrected wording and feedback"),
                                 "The question was clarified and the answer choices were normalized.",
                                 "Ambiguous wording in the original question",
-                                new QuestionResponse(
-                                                QUESTION_ID,
-                                                "What is the solution to 2x - 2 = 2?",
-                                                "ONE_CHOICE",
-                                                "question_image",
-                                                "Corrected feedback",
-                                                null,
-                                                "question_audio",
-                                                1,
-                                                new ObjectiveResponse("objective-1", "Solve linear equations"),
-                                                List.of(new SubQuestionResponse(
-                                                                "sub-question-1",
-                                                                "Solve: 2x - 2 = 2",
-                                                                1,
-                                                                List.of(
-                                                                                new AnswerResponse("answer-1", "x = 2",
-                                                                                                "answer_image_1", true,
-                                                                                                "answer_audio_1", 1),
-                                                                                new AnswerResponse("answer-2", "x = 5",
-                                                                                                "answer_image_2", false,
-                                                                                                "answer_audio_2",
-                                                                                                2))))));
+                                improvedQuestion,
+                                improvedQuestion);
 
                 when(questionCorrectionService.correctQuestion(QUESTION_ID)).thenReturn(mockedResponse);
 

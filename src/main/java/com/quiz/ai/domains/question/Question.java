@@ -3,6 +3,7 @@ package com.quiz.ai.domains.question;
 import com.quiz.ai.domains.quiz.Quiz;
 import com.quiz.ai.enums.QuestionType;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,6 +34,7 @@ public class Question {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     protected String id;
 
+    @Column(columnDefinition = "text")
     private String question;
 
     @Enumerated(EnumType.STRING)
@@ -40,6 +42,7 @@ public class Question {
 
     private String image;
 
+    @Column(columnDefinition = "text")
     private String feedback;
 
     private String feedbackAudio;

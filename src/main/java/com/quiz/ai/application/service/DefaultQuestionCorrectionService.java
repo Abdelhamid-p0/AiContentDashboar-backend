@@ -1,6 +1,7 @@
 package com.quiz.ai.application.service;
 
 import com.quiz.ai.application.dto.correction.QuestionCorrectionResponse;
+import com.quiz.ai.application.dto.question.QuestionResponse;
 import com.quiz.ai.domains.question.Question;
 import com.quiz.ai.infrastructure.llm.client.LLMClient;
 import com.quiz.ai.infrastructure.llm.prompt.PromptBuilder;
@@ -39,7 +40,7 @@ public class DefaultQuestionCorrectionService implements QuestionCorrectionServi
                     QuestionCorrectionResponse.class);
 
             log.info("Question correction completed successfully");
-            return response;
+            return attachOriginalQuestion(question, response);
         } catch (Exception e) {
             log.error("Error correcting question: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to correct question with LLM", e);
@@ -84,10 +85,23 @@ public class DefaultQuestionCorrectionService implements QuestionCorrectionServi
                     QuestionCorrectionResponse.class);
 
             log.info("Personalized correction completed successfully");
-            return response;
+            return attachOriginalQuestion(question, response);
         } catch (Exception e) {
             log.error("Error correcting question with personalization: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to personalize question correction with LLM", e);
         }
+    }
+
+    private QuestionCorrectionResponse attachOriginalQuestion(
+            Question question,
+            QuestionCorrectionResponse response) {
+        QuestionResponse originalQuestion = QuestionResponse.fromEntity(question);
+
+        return new QuestionCorrectionResponse(
+                response.corrections(),
+                response.explanation(),
+                response.detectedErrors(),
+                originalQuestion,
+                response.improvedQuestion());
     }
 }

@@ -1,5 +1,6 @@
 package com.quiz.ai.domains.question;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,6 +29,7 @@ public class SubQuestion {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     protected String id;
 
+    @Column(columnDefinition = "text")
     private String question;
 
     private Integer orderNum;

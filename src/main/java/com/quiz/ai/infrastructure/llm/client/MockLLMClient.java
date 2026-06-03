@@ -37,28 +37,31 @@ public class MockLLMClient implements LLMClient {
     }
 
     private QuestionCorrectionResponse buildResponse(String questionId) {
+        QuestionResponse improvedQuestion = new QuestionResponse(
+                questionId,
+                "What is the solution to 2x - 2 = 2?",
+                "ONE_CHOICE",
+                "question_image",
+                "Corrected feedback",
+                null,
+                "question_audio",
+                1,
+                new ObjectiveResponse("objective-1", "Solve linear equations"),
+                List.of(new SubQuestionResponse(
+                        "sub-question-1",
+                        "Solve: 2x - 2 = 2",
+                        1,
+                        List.of(
+                                new AnswerResponse("answer-1", "x = 2", "answer_image_1", true,
+                                        "answer_audio_1", 1),
+                                new AnswerResponse("answer-2", "x = 5", "answer_image_2", false,
+                                        "answer_audio_2", 2)))));
+
         return new QuestionCorrectionResponse(
                 List.of("Corrected wording and feedback"),
                 "The question was clarified and the answer choices were normalized.",
                 "Ambiguous wording in the original question",
-                new QuestionResponse(
-                        questionId,
-                        "What is the solution to 2x - 2 = 2?",
-                        "ONE_CHOICE",
-                        "question_image",
-                        "Corrected feedback",
-                        null,
-                        "question_audio",
-                        1,
-                        new ObjectiveResponse("objective-1", "Solve linear equations"),
-                        List.of(new SubQuestionResponse(
-                                "sub-question-1",
-                                "Solve: 2x - 2 = 2",
-                                1,
-                                List.of(
-                                        new AnswerResponse("answer-1", "x = 2", "answer_image_1", true,
-                                                "answer_audio_1", 1),
-                                        new AnswerResponse("answer-2", "x = 5", "answer_image_2", false,
-                                                "answer_audio_2", 2))))));
+                improvedQuestion,
+                improvedQuestion);
     }
 }

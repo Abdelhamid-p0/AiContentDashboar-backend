@@ -23,6 +23,37 @@ GET /api/v1/questions/{questionId}/correct
   "corrections": "Liste des corrections spécifiques effectuées",
   "explanation": "Pourquoi ces corrections étaient nécessaires",
   "detected_errors": "Erreurs spécifiques trouvées",
+  "original_question": {
+    "id": "...",
+    "question": "Question originale",
+    "question_type": "ONE_CHOICE",
+    "image": "url_image ou null",
+    "feedback": "Retour original",
+    "feedback_audio": "url_audio ou null",
+    "question_audio": "url_audio ou null",
+    "order_num": 1,
+    "objective": {
+      "id": "...",
+      "objective": "Texte de l'objectif"
+    },
+    "sub_questions": [
+      {
+        "id": "...",
+        "question": "Sous-question",
+        "order_num": 1,
+        "answers": [
+          {
+            "id": "...",
+            "answer": "Réponse originale",
+            "image": "url ou null",
+            "is_right": true,
+            "answer_audio": "url ou null",
+            "order_num": 1
+          }
+        ]
+      }
+    ]
+  },
   "improved_question": {
     "id": "...",
     "question": "Question corrigée",

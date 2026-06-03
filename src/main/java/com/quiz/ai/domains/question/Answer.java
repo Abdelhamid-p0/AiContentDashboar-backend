@@ -1,5 +1,6 @@
 package com.quiz.ai.domains.question;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -24,6 +25,7 @@ public class Answer {
 
     private Integer orderNum;
 
+    @Column(columnDefinition = "text")
     private String answer;
 
     private String image;
