@@ -1,0 +1,13 @@
+package com.quiz.ai.prompt_builder_module.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.quiz.ai.prompt_builder_module.model.prompt.PromptSettings;
+
+import java.util.Optional;
+
+@Repository
+public interface PromptSettingsRepository extends JpaRepository<PromptSettings, String> {
+    Optional<PromptSettings> findTopByOrderByUpdatedAtDesc();
+}

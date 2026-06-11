@@ -1,20 +1,21 @@
 package com.quiz.ai.interfaces.rest;
 
-import com.quiz.ai.domains.quiz.Quiz;
-import com.quiz.ai.domains.school.Level;
-import com.quiz.ai.domains.subject.Course;
-import com.quiz.ai.domains.subject.Domain;
-import com.quiz.ai.domains.subject.Subject;
-import com.quiz.ai.enums.Cycle;
-import com.quiz.ai.enums.Semester;
-import com.quiz.ai.enums.Type;
-import com.quiz.ai.application.dto.quiz.QuizzesByTypeResponse;
-import com.quiz.ai.application.service.QuizService;
-import com.quiz.ai.repository.CourseRepository;
-import com.quiz.ai.repository.DomainRepository;
-import com.quiz.ai.repository.LevelRepository;
-import com.quiz.ai.repository.QuizRepository;
-import com.quiz.ai.repository.SubjectRepository;
+import com.quiz.ai.quiz_module.dto.quiz.QuizzesByTypeResponse;
+import com.quiz.ai.quiz_module.entity.quiz.Quiz;
+import com.quiz.ai.quiz_module.entity.school.Level;
+import com.quiz.ai.quiz_module.entity.subject.Course;
+import com.quiz.ai.quiz_module.entity.subject.Domain;
+import com.quiz.ai.quiz_module.entity.subject.Subject;
+import com.quiz.ai.quiz_module.enums.Cycle;
+import com.quiz.ai.quiz_module.enums.Semester;
+import com.quiz.ai.quiz_module.enums.Type;
+import com.quiz.ai.quiz_module.repository.CourseRepository;
+import com.quiz.ai.quiz_module.repository.DomainRepository;
+import com.quiz.ai.quiz_module.repository.LevelRepository;
+import com.quiz.ai.quiz_module.repository.QuizRepository;
+import com.quiz.ai.quiz_module.repository.SubjectRepository;
+import com.quiz.ai.quiz_module.service.interfaces.QuizService;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
