@@ -1,10 +1,11 @@
 package com.quiz.ai.ragModule.service.retrieval;
 
+import com.quiz.ai.ragModule.dto.PedagogicalRagContext;
+
 public interface PedagogicalRagService {
 
-    String retrieveContext(
+    PedagogicalRagContext retrieveContext(
             String level,
             String subject,
-            String domain,
-            String semester);
+            String domain);
 }

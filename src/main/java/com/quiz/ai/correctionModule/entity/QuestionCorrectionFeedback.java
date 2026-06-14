@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,27 +18,28 @@ import java.time.Instant;
 
 @Builder
 @Entity
+@Table(name = "question_correction_feedback")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class PromptSettings {
+public class QuestionCorrectionFeedback {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     protected String id;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String systemMessageTemplate;
+    @Column(name = "question_id", nullable = false)
+    private String questionId;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String generalRules;
+    @Column(nullable = false)
+    private Integer rating;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String correctionPromptTemplate;
+    @Column(columnDefinition = "TEXT")
+    private String comment;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String chatPromptTemplate;
+    @Column(name = "correction_snapshot", nullable = false, columnDefinition = "TEXT")
+    private String correctionSnapshot;
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;

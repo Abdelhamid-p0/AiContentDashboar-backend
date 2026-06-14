@@ -1,8 +1,8 @@
 package com.quiz.ai.correctionModule.prompt;
 
 import com.quiz.ai.correctionModule.dto.QuestionCorrectionResponse;
-import com.quiz.ai.quizModule.entity.question.Question;
-import com.quiz.ai.quizModule.entity.subject.Course;
+import com.quiz.ai.quizModule.dto.course.CourseCorrectionContextResponse;
+import com.quiz.ai.quizModule.dto.question.CorrectionQuestionResponse;
 
 public interface PromptBuilder {
     /**
@@ -11,7 +11,7 @@ public interface PromptBuilder {
      * @param course the course context
      * @return the system message
      */
-    String buildSystemMessage(Course course);
+    SystemPromptResult buildSystemMessage(CourseCorrectionContextResponse course);
 
     /**
      * Build the full user prompt for question correction
@@ -20,7 +20,7 @@ public interface PromptBuilder {
      * @param course   the course context
      * @return the user prompt
      */
-    String buildQuestionCorrectionPrompt(Question question, Course course);
+    String buildQuestionCorrectionPrompt(CorrectionQuestionResponse question, CourseCorrectionContextResponse course);
 
     /**
      * Build a prompt that refines the correction using user instructions and the
@@ -33,8 +33,8 @@ public interface PromptBuilder {
      * @return the user prompt
      */
     String buildQuestionCorrectionChatPrompt(
-            Question question,
-            Course course,
+            CorrectionQuestionResponse question,
+            CourseCorrectionContextResponse course,
             QuestionCorrectionResponse previousCorrection,
             String userMessage);
 }

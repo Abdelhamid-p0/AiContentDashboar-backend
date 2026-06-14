@@ -1,6 +1,8 @@
 package com.quiz.ai.correctionModule.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
@@ -9,84 +11,110 @@ import com.quiz.ai.correctionModule.dto.PromptSettingsRequest;
 import com.quiz.ai.correctionModule.entity.PromptSettings;
 import com.quiz.ai.correctionModule.repository.PromptSettingsRepository;
 
-import java.util.List;
-
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PromptSettingsServiceImpl implements PromptSettingsService {
 
-    private static final List<String> REQUIRED_SYSTEM_TOKENS = List.of("pedagogical_rules", "rag_rules_title",
-            "rag_context");
-
-    private static final List<String> REQUIRED_CORRECTION_TOKENS = List.of("question_json", "output_format");
-
-    private static final List<String> REQUIRED_CHAT_TOKENS = List.of("instruction", "previous_correction_json",
-            "question_json", "output_format");
-
-    private static final String DEFAULT_PEDAGOGICAL_RULES = """
-            - Ensure questions are clear and unambiguous
-            - Ensure answers are correct
-            - Keep correct answers unchanged unless necessary
-            - Avoid making all answers true
-            - Ensure pedagogical relevance
+    private static final String DEFAULT_GENERAL_RULES = """
+            - Ensure clarity and unambiguous questions
+            - Ensure answers are consistent with course, level, and domain
+            - Ensure pedagogical correctness
+            - Avoid introducing knowledge outside curriculum
+            - respect strictly the rag_context as pedagogical source of truth
             """;
 
+    // =========================
+    // SYSTEM PROMPT (OPTIMIZED)
+    // =========================
     private static final String DEFAULT_SYSTEM_MESSAGE_TEMPLATE = """
-            You are an expert pedagogical assistant.
-
-            TASK:
-            - Correct educational questions
-            - Respect pedagogical rules strictly
-            - Improve clarity and accuracy
+            You are an expert pedagogical AI system.
 
             =========================
-            RAG INPUT (DO NOT IGNORE)
+            ROLE
             =========================
+            You are NOT a chatbot.
+            You are a deterministic JSON generator.
 
-            RULE TITLE (MUST BE COPIED EXACTLY):
-            {{rag_rules_title}}
+            =========================
+            TASK
+            =========================
+            - Analyze educational questions
+            - Detect inconsistencies or errors
+            - Improve pedagogy and clarity
+            - Generate missing fields ONLY when necessary
 
-            RAG CONTEXT (MUST BE COPIED EXACTLY INTO OUTPUT):
+            =========================
+            OUTPUT CONTRACT (STRICT)
+            =========================
+            You MUST return ONLY valid JSON matching:
+            QuestionCorrectionResponse.class
+
+            Rules:
+            - No extra fields
+            - No missing fields
+            - Always valid JSON
+
+
+            =========================
+            GENERAL RULES
+            =========================
+            {{general_rules}}
+
+
+            =========================
+            CONTEXT (DO NOT MODIFY)
+            =========================
+            rag_context:
             {{rag_context}}
 
-            =========================
-            CONTEXT INFO
-            =========================
-            Level: {{level}}
-            Subject: {{subject}}
-            Domain: {{domain}}
-            Semester: {{semester}}
-
-            Pedagogical Rules:
-            {{pedagogical_rules}}
 
             =========================
-            STRICT RULES
+            MULTIPLE CHOICE RULE (CRITICAL)
             =========================
-            1. NEVER modify rag_rules_title
-            2. ALWAYS copy rag_context into output field "context"
-            3. NEVER invent missing fields
-            4. Return ONLY valid JSON
+            - Answers are NOT fixed: they may be corrected ONLY if clearly incorrect
+            - Never randomly flip answers
+            - Never modify correct answers without strong justification
+            - Always preserve valid correct answers
+            - Corrections must be based on course, level, and context
+
+            =========================
+            FINAL RULE
+            =========================
+            Return ONLY valid JSON matching QuestionCorrectionResponse.class
             """;
 
+    // =========================
+    // CORRECTION PROMPT
+    // =========================
     private static final String DEFAULT_CORRECTION_PROMPT_TEMPLATE = """
-            Analyze and correct the question.
+            Correct the following educational question.
 
-            QUESTION:
+            =========================
+            INPUT
+            =========================
             {{question_json}}
 
-            OUTPUT FORMAT:
-            {{output_format}}
 
-            Return ONLY JSON.
+            =========================
+            OUTPUT CONTRACT
+            =========================
+            Return ONLY JSON matching:
+            QuestionCorrectionResponse.class
             """;
 
+    // =========================
+    // CHAT PROMPT
+    // =========================
     private static final String DEFAULT_CHAT_PROMPT_TEMPLATE = """
             User instruction:
             {{instruction}}
+
+            Context:
+            {{instruction_context}}
 
             Previous correction:
             {{previous_correction_json}}
@@ -94,10 +122,13 @@ public class PromptSettingsServiceImpl implements PromptSettingsService {
             Question:
             {{question_json}}
 
-            Output format:
-            {{output_format}}
 
-            Return ONLY JSON.
+            =========================
+            OUTPUT CONTRACT
+            =========================
+            Return ONLY JSON matching QuestionCorrectionResponse.class
+
+
             """;
 
     private final PromptSettingsRepository promptSettingsRepository;
@@ -132,13 +163,14 @@ public class PromptSettingsServiceImpl implements PromptSettingsService {
 
     @Override
     public void deletePromptSettings() {
+        log.info("Deleting all prompt settings");
         promptSettingsRepository.deleteAll();
     }
 
     private PromptSettings buildDefaultSettings() {
         PromptSettings settings = new PromptSettings();
         settings.setSystemMessageTemplate(DEFAULT_SYSTEM_MESSAGE_TEMPLATE);
-        settings.setPedagogicalRules(DEFAULT_PEDAGOGICAL_RULES);
+        settings.setGeneralRules(DEFAULT_GENERAL_RULES);
         settings.setCorrectionPromptTemplate(DEFAULT_CORRECTION_PROMPT_TEMPLATE);
         settings.setChatPromptTemplate(DEFAULT_CHAT_PROMPT_TEMPLATE);
         return settings;
@@ -152,14 +184,14 @@ public class PromptSettingsServiceImpl implements PromptSettingsService {
 
     private void applyRequest(PromptSettings settings, PromptSettingsRequest request) {
         settings.setSystemMessageTemplate(request.systemMessageTemplate());
-        settings.setPedagogicalRules(request.pedagogicalRules());
+        settings.setGeneralRules(request.generalRules());
         settings.setCorrectionPromptTemplate(request.correctionPromptTemplate());
         settings.setChatPromptTemplate(request.chatPromptTemplate());
     }
 
     private void validateRequest(PromptSettingsRequest request) {
         requireText(request.systemMessageTemplate(), "system_message_template");
-        requireText(request.pedagogicalRules(), "pedagogical_rules");
+        requireText(request.generalRules(), "general_rules");
         requireText(request.correctionPromptTemplate(), "correction_prompt_template");
         requireText(request.chatPromptTemplate(), "chat_prompt_template");
     }

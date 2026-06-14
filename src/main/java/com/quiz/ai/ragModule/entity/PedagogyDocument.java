@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,8 +40,5 @@ public class PedagogyDocument {
     private String domain;
 
     private String documentType;
-
-    @Column(columnDefinition = "vector(1024)")
-    private float[] embedding;
 
 }

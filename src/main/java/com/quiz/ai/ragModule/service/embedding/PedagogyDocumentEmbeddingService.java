@@ -31,9 +31,11 @@ public class PedagogyDocumentEmbeddingService {
                 embeddingArray[i] = embedding.get(i).floatValue();
             }
 
-            doc.setEmbedding(embeddingArray);
+            String vector = embedding.toString();
 
-            repository.save(doc);
+            repository.updateEmbedding(
+                    doc.getId(),
+                    vector);
         }
     }
 }

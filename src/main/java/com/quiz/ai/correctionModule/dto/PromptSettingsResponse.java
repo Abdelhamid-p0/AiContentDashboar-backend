@@ -8,7 +8,7 @@ import java.time.Instant;
 public record PromptSettingsResponse(
         @JsonProperty("id") String id,
         @JsonProperty("system_message_template") String systemMessageTemplate,
-        @JsonProperty("pedagogical_rules") String pedagogicalRules,
+        @JsonProperty("general_rules") String generalRules,
         @JsonProperty("correction_prompt_template") String correctionPromptTemplate,
         @JsonProperty("chat_prompt_template") String chatPromptTemplate,
         @JsonProperty("created_at") Instant createdAt,
@@ -18,7 +18,7 @@ public record PromptSettingsResponse(
         return new PromptSettingsResponse(
                 settings.getId(),
                 settings.getSystemMessageTemplate(),
-                settings.getPedagogicalRules(),
+                settings.getGeneralRules(),
                 settings.getCorrectionPromptTemplate(),
                 settings.getChatPromptTemplate(),
                 settings.getCreatedAt(),

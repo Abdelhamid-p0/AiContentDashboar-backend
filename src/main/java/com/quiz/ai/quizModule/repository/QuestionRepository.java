@@ -28,4 +28,18 @@ public interface QuestionRepository extends JpaRepository<Question, String> {
                         where question.id = :questionId
                         """)
         Optional<Question> findDetailedById(@Param("questionId") String questionId);
+
+        @Query("""
+                        select distinct question
+                        from Question question
+                        left join fetch question.objective
+                        left join fetch question.subQuestions
+                        join fetch question.quiz quiz
+                        join fetch quiz.course course
+                        left join fetch course.level
+                        left join fetch course.subject
+                        left join fetch course.domain
+                        where question.id = :questionId
+                        """)
+        Optional<Question> findCorrectionContextById(@Param("questionId") String questionId);
 }
