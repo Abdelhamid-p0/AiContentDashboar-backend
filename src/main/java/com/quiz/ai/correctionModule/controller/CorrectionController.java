@@ -58,11 +58,11 @@ public class CorrectionController {
  * correction) X
  * - dto de question à envoyer au systeme rag X
  * 
- * - découpler les modules x
- * - décomposer le module correction
+ * - découpler les modules X
+ * - décomposer le module correction 
  * 
- * - Afficher le context dans le front
- * - 5 étoile d'évaluation + feedback
+ * - Afficher le context dans le front X
+ * - 5 étoile d'évaluation + feedback  X
  * - Agent orchestrateur global
  * 
  */

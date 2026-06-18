@@ -22,13 +22,17 @@ public class PromptSettingsServiceImpl implements PromptSettingsService {
     private static final String DEFAULT_GENERAL_RULES = """
             - Ensure clarity and unambiguous questions
             - Ensure answers are consistent with course, level, and domain
+            - Never change the question's language
+            - Never change the question's format (e.g., multiple choice, true/false, etc.)
+            - Never change structure of the question (e.g., stem, options, etc.)
+            - Never make some fields empty or null
             - Ensure pedagogical correctness
             - Avoid introducing knowledge outside curriculum
             - respect strictly the rag_context as pedagogical source of truth
             """;
 
     // =========================
-    // SYSTEM PROMPT (OPTIMIZED)
+    // SYSTEM PROMPT
     // =========================
     private static final String DEFAULT_SYSTEM_MESSAGE_TEMPLATE = """
             You are an expert pedagogical AI system.
@@ -45,7 +49,7 @@ public class PromptSettingsServiceImpl implements PromptSettingsService {
             - Analyze educational questions
             - Detect inconsistencies or errors
             - Improve pedagogy and clarity
-            - Generate missing fields ONLY when necessary
+            - Generate missing fields
 
             =========================
             OUTPUT CONTRACT (STRICT)
@@ -71,16 +75,6 @@ public class PromptSettingsServiceImpl implements PromptSettingsService {
             rag_context:
             {{rag_context}}
 
-
-            =========================
-            MULTIPLE CHOICE RULE (CRITICAL)
-            =========================
-            - Answers are NOT fixed: they may be corrected ONLY if clearly incorrect
-            - Never randomly flip answers
-            - Never modify correct answers without strong justification
-            - Always preserve valid correct answers
-            - Corrections must be based on course, level, and context
-
             =========================
             FINAL RULE
             =========================
@@ -98,12 +92,6 @@ public class PromptSettingsServiceImpl implements PromptSettingsService {
             =========================
             {{question_json}}
 
-
-            =========================
-            OUTPUT CONTRACT
-            =========================
-            Return ONLY JSON matching:
-            QuestionCorrectionResponse.class
             """;
 
     // =========================
@@ -121,13 +109,6 @@ public class PromptSettingsServiceImpl implements PromptSettingsService {
 
             Question:
             {{question_json}}
-
-
-            =========================
-            OUTPUT CONTRACT
-            =========================
-            Return ONLY JSON matching QuestionCorrectionResponse.class
-
 
             """;
 

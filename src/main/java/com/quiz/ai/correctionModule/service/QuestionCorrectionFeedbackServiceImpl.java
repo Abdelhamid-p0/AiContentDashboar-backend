@@ -18,7 +18,8 @@ public class QuestionCorrectionFeedbackServiceImpl implements QuestionCorrection
 
     @Override
     @Transactional
-    public QuestionCorrectionFeedbackResponse submitFeedback(String questionId, QuestionCorrectionFeedbackRequest request) {
+    public QuestionCorrectionFeedbackResponse submitFeedback(String questionId,
+            QuestionCorrectionFeedbackRequest request) {
         if (request == null) {
             throw new IllegalArgumentException("Feedback payload is required");
         }
