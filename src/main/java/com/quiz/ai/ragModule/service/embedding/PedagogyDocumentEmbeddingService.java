@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 import com.quiz.ai.ragModule.entity.PedagogyDocument;
 import com.quiz.ai.ragModule.repository.PedagogyDocumentRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PedagogyDocumentEmbeddingService {
 
     private final PedagogyDocumentRepository repository;
